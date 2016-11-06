@@ -1370,6 +1370,12 @@ class GetTypeHintTests(BaseTestCase):
                                   {'y': int, 'x': ClassVar[Optional[B]]}, {}))
         self.assertEqual(gth(G), ChainMap({'lst': ClassVar[List[T]]},{},{}))
 
+    def test_get_type_hints_for_object_with_annotations(self):
+        class A: ...
+        class B: ...
+        b = B()
+        b.__annotations__ = {'x': 'A'}
+        self.assertEqual(gth(b, locals()), {'x': A})
 
 class CollectionsAbcTests(BaseTestCase):
 

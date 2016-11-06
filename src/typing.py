@@ -1332,7 +1332,11 @@ def cast(typ, val):
 
 def _get_defaults(func):
     """Internal helper to extract the default arguments, by name."""
-    code = func.__code__
+    try:
+        code = func.__code__
+    except AttributeError:
+        # Some built-in functions don't have __code__, __defaults__, etc.
+        return {}
     pos_count = code.co_argcount
     arg_names = code.co_varnames
     arg_names = arg_names[:pos_count]
@@ -1416,7 +1420,7 @@ if sys.version_info[:2] >= (3, 3):
                 hints[name] = value
             return hints
 
-        if isinstance(object, type):
+        if isinstance(obj, type):
             cmap = None
             for base in reversed(obj.__mro__):
                 new_map = collections.ChainMap if cmap is None else cmap.new_child
@@ -1434,6 +1438,17 @@ if sys.version_info[:2] >= (3, 3):
                         hints[name] = value
                     cmap = new_map(hints)
             return cmap
+
+        hints = getattr(obj, '__annotations__', None)
+        if hints is not None:
+            for name, value in hints.items():
+                if value is None:
+                    value = type(None)
+                if isinstance(value, str):
+                    value = _ForwardRef(value)
+                value = _eval_type(value, globalns, localns)
+                hints[name] = value
+            return hints
 
         raise TypeError('{!r} is not a module, class, method, '
                         'or function.'.format(obj))
@@ -1469,7 +1484,7 @@ else:
         elif localns is None:
             localns = globalns
         defaults = _get_defaults(obj)
-        hints = dict(obj.__annotations__)
+        hints = dict(getattr(obj, '__annotations__', {}))
         for name, value in hints.items():
             if isinstance(value, str):
                 value = _ForwardRef(value)
