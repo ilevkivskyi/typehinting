@@ -469,7 +469,7 @@ class CollectionsAbcTests(BaseTestCase):
         self.assertIs(type(typing_extensions.Counter[T]()), collections.Counter)
         self.assertIs(type(typing_extensions.Counter[int]()), collections.Counter)
         class C(typing_extensions.Counter[T]): ...
-        if TYPING_3_5_3:
+        if TYPING_3_5_3 and HAVE_PROTOCOLS:
             self.assertIs(type(C[int]()), C)
             self.assertEqual(C.__bases__, (typing_extensions.Counter,))
 
@@ -1234,7 +1234,7 @@ class AllTests(BaseTestCase):
         if PY36:
             self.assertIn('AsyncGenerator', a)
 
-        if TYPING_3_5_3:
+        if TYPING_3_5_3 and HAVE_PROTOCOLS:
             self.assertIn('Protocol', a)
             self.assertIn('runtime', a)
 
