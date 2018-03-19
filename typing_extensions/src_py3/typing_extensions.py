@@ -126,7 +126,7 @@ __all__ = [
 ]
 
 # Protocols are hard to backport to the original version of typing 3.5.0
-HAVE_PROTOCOLS = sys.version_info[:3] != (3, 5, 0)
+HAVE_PROTOCOLS = sys.version_info[:3] != (3, 5, 0) and sys.version_info[:3] < (3, 7, 0)
 
 if HAVE_PROTOCOLS:
     __all__.extend(['Protocol', 'runtime'])
