@@ -664,7 +664,7 @@ class NT(NamedTuple):
     y: int
 """
 
-if PY36:
+if PY36 and HAVE_PROTOCOLS:
     exec(PY36_PROTOCOL_TESTS)
 else:
     # fake names for the sake of static analysis
