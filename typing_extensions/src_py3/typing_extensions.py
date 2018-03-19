@@ -8,7 +8,11 @@ import collections.abc as collections_abc
 # These are used by Protocol implementation
 # We use internal typing helpers here, but this significantly reduces
 # code duplication. (Also this is only until Protocol is in typing.)
-from typing import GenericMeta, TypingMeta, Generic, Callable, TypeVar, Tuple
+from typing import Generic, Callable, TypeVar, Tuple
+try:
+    from typing import GenericMeta, TypingMeta
+except ImportError:
+    GenericMeta = TypingMeta = type
 OLD_GENERICS = False
 try:
     from typing import _type_vars, _next_in_mro, _type_check
