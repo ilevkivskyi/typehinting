@@ -59,7 +59,7 @@ ASYNCIO = sys.version_info[:2] >= (3, 5)
 PY36 = sys.version_info[:2] >= (3, 6)
 
 # Protocols are hard to backport to the original version of typing 3.5.0
-HAVE_PROTOCOLS = sys.version_info[:3] != (3, 5, 0)
+HAVE_PROTOCOLS = sys.version_info[:3] != (3, 5, 0) and sys.version_info[:3] < (3, 7, 0)
 
 
 class BaseTestCase(TestCase):
